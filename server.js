@@ -11,7 +11,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 // 创建Express应用实例
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // 配置中间件
 // 启用CORS跨域支持
@@ -21,9 +21,12 @@ app.use(express.json());
 // 配置静态文件服务，支持前端资源访问
 app.use(express.static('.'));
 
+// 导入dotenv配置环境变量
+require('dotenv').config();
+
 // API配置
-const API_KEY = '5c6b7b2f-47e2-4811-b577-6e5653f49815';
-const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+const API_KEY = process.env.API_KEY;
+const API_URL = process.env.API_URL;
 
 // 错误处理中间件
 const errorHandler = (err, req, res, next) => {

@@ -275,7 +275,11 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`服务器响应错误: ${response.status}`);
+                }
+
+                if (!response.body) {
+                    throw new Error('服务器返回的响应体为空');
                 }
 
                 // 创建新的TextDecoder来解码响应数据
@@ -288,25 +292,30 @@
                 const aiMessageContent = aiMessageDiv.querySelector('.message-content');
 
                 while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
+                    try {
+                        const { done, value } = await reader.read();
+                        if (done) break;
 
-                    // 解码并处理新的数据块
-                    const chunk = decoder.decode(value);
-                    aiResponse += chunk;
-                    aiMessageContent.textContent = aiResponse;
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                        // 解码并处理新的数据块
+                        const chunk = decoder.decode(value);
+                        aiResponse += chunk;
+                        aiMessageContent.textContent = aiResponse;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } catch (streamError) {
+                        console.error('读取流数据时发生错误:', streamError);
+                        throw new Error('读取AI响应时发生错误');
+                    }
                 }
-
             } catch (error) {
-                console.error('Error:', error);
+                console.error('发送消息时发生错误:', error);
+                // 显示错误消息
                 aiMessageDiv.innerHTML = `
                     <div class="message-content error">
-                        抱歉，发生了错误：${error.message}
+                        发生错误: ${error.message}。请稍后重试。
                     </div>
                 `;
             } finally {
-                // 重新启用输入和发送按钮
+                // 恢复输入和发送按钮
                 messageInput.disabled = false;
                 sendButton.disabled = false;
                 messageInput.focus();

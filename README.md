@@ -1,5 +1,4 @@
 # AI Life Coach
-
 ## 版本 0.1
 
 一个基于AI的智能生命教练系统，旨在帮助用户实现个人成长和目标达成。
@@ -20,9 +19,10 @@
 ### 使用方法
 
 1. 确保已安装Node.js环境
-2. 安装依赖：`npm install`
-3. 启动服务器：`node server.js`
-4. 访问 http://localhost:3000 开始使用
+2. 克隆项目到本地
+3. 在项目根目录运行 `npm install` 安装依赖
+4. 运行 `npm start` 启动服务器
+5. 在浏览器中访问 `http://localhost:3000`
 
 ### 注意事项
 

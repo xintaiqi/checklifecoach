@@ -21,12 +21,20 @@ app.use(express.json());
 // 配置静态文件服务，支持前端资源访问
 app.use(express.static('.'));
 
-// 导入dotenv配置环境变量
-require('dotenv').config();
+// 导入dotenv配置环境变量（仅在开发环境中加载.env文件）
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 // API配置
 const API_KEY = process.env.API_KEY;
 const API_URL = process.env.API_URL;
+
+// 验证环境变量
+if (!API_KEY || !API_URL) {
+    console.error('错误：缺少必要的环境变量配置');
+    process.exit(1);
+}
 
 // 错误处理中间件
 const errorHandler = (err, req, res, next) => {
